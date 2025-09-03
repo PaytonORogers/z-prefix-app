@@ -1,0 +1,19 @@
+{
+  "name": "z-prefix-app",
+  "version": "1.0.0",
+  "description": "full stack app for Z-Prefix application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaytonORogers/z-prefix-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PaytonORogers/z-prefix-app/issues"
+  },
+  "homepage": "https://github.com/PaytonORogers/z-prefix-app#readme"
+}
