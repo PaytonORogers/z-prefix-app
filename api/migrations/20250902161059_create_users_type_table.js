@@ -9,7 +9,6 @@ exports.up = function (knex) {
     table.string('last_name');
     table.string('username').notNullable();
     table.string('hashed_password').notNullable();
-    table.timestamps(true, true); // utility columns, adds created_at and updated_at
   });
 };
 

@@ -57,17 +57,17 @@ app.get('/users/:uid', (req, res) => {
     })
 })
 
-app.get('/items/:uid', (req, res) => {
+app.get('/items/:iid', (req, res) => {
   knex
     .select('*')
     .from('items')
-    .where('items.uid', '=', `${req.params.uid}`)
+    .where('items.iid', '=', `${req.params.iid}`)
     .then((items) => {
       if (items[0]) {
         res.status(200).send(items)
       }
       else {
-        res.status(404).send(`No items found that belong to ${req.params.uid}`)
+        res.status(404).send(`No items found with ${req.params.uid}`)
       }
     })
     .catch((err) => {
@@ -85,20 +85,69 @@ app.post('/users', async (req, res) => {
   const existingUser = await knex.select('*').from('users').where('username', '=', newUser.username);
   console.log(existingUser)
   // checking if user input has all required fields (first and last name are not required)
-  if (newUser && 
-    Object.hasOwn(newUser, 'username') && 
+  if (newUser &&
+    Object.hasOwn(newUser, 'first_name') &&
+    Object.hasOwn(newUser, 'last_name') &&
+    Object.hasOwn(newUser, 'username') &&
     Object.hasOwn(newUser, 'hashed_password')) {
     // if username already taken
     if (existingUser[0]) {
-      return res.status(409).send("User already exists");
+      return res.status(409).send('Username is already taken!');
+    } else {
+      // adding user to db
+      knex('users')
+        .insert(newUser)
+        .then((info) => res.status(200).send(info))
     }
-    // adding user to db
-    knex('users')
-      .insert(newUser, ['username', 'hashed_password'])
-      .then((info) => res.status(200).send(info))
   } else {
     res.status(400).send('Missing required properties')
   }
+})
+
+// create new item
+
+app.post('/items', async (req, res) => {
+  let newItem = req.body
+  // checking db for a item with the same name
+  const existingItem = await knex.select('*').from('items').where('item_name', '=', newItem.item_name);
+  console.log(existingItem)
+  // checking if user input has all required fields
+  if (newItem &&
+    Object.hasOwn(newItem, 'uid') &&
+    Object.hasOwn(newItem, 'item_name') &&
+    Object.hasOwn(newItem, 'description') &&
+    Object.hasOwn(newItem, 'quantity')) {
+    // if it already exists
+    if (existingItem[0]) {
+      return res.status(409).send('Item is already in table!');
+    } else {
+      // adding item to db
+      knex('items')
+        .insert(newItem)
+        .then((info) => res.status(200).send(info))
+    }
+  } else {
+    res.status(400).send('Missing required properties')
+  }
+})
+
+app.put('/items/:iid', (req, res) => {
+  let iid = req.params;
+  let item = req.body;
+
+  knex('items')
+    .where('iid', '=', iid)
+    .update(
+      {
+        "uid": item.uid,
+        "item_name": item.item_name,
+        "description": item.description,
+        "quantity": item.quantity
+      }
+    )
+    .then((info) => {
+      res.status(200).send(info);
+    })
 })
 
 app.listen(port, () => {

@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/PaytonORogers/z-prefix-app/issues"
   },
-  "homepage": "https://github.com/PaytonORogers/z-prefix-app#readme"
+  "homepage": "https://github.com/PaytonORogers/z-prefix-app#readme",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "vite": "^7.1.4"
+  }
 }
