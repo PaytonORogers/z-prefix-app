@@ -5,7 +5,7 @@ import { AppContext } from './App.jsx'
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const { userid, setUserid, isLoggedIn, setIsLoggedIn } = useContext(AppContext)
+  const { userid, setUserid, isLoggedIn, setIsLoggedIn, firstname, setFirstname } = useContext(AppContext)
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
   const [newUser, setNewUser] = useState(false)
@@ -38,6 +38,7 @@ function Login() {
         return users
       })
       .then(user => {
+        setFirstname(user.first_name)
         bcrypt.compare(password, user.hashed_password, function (err, result) {
           if (err) {
             console.error("Error comparing passwords:", err);

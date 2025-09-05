@@ -132,9 +132,11 @@ app.post('/items', async (req, res) => {
 })
 
 app.put('/items/:iid', (req, res) => {
-  let iid = req.params;
+  let iid = req.params.iid;
   let item = req.body;
-
+  if (item.quantity === null) {
+    item.quantity = 0;
+  }
   knex('items')
     .where('iid', '=', iid)
     .update(
@@ -148,6 +150,22 @@ app.put('/items/:iid', (req, res) => {
     .then((info) => {
       res.status(200).send(info);
     })
+})
+
+app.delete('/items/:iid', (req, res) => {
+  let iid = req.params.iid;
+  
+  knex('items')
+  .where('iid', '=', iid)
+  .del()
+  .then((rowsAffected) => {
+    if (rowsAffected) {
+      res.status(200).send('Item deleted successfully'); 
+    } else {
+      res.status(404).send(`No item found with iid ${iid}`);
+    }
+  })
+  .catch((err) => res.status(500).send(err))
 })
 
 app.listen(port, () => {
